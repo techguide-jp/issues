@@ -1,0 +1,62 @@
+name: Notify Slack on Issue Status Change
+
+on:
+  projects_v2_item:
+    types: [edited]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check jq installation
+        run: jq --version
+
+      - name: Debug GitHub Event
+        env:
+          GITHUB_EVENT_JSON: ${{ toJson(github.event) }}
+        run: echo "イベントテスト：$GITHUB_EVENT_JSON"
+
+      - name: Extract status and send Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MF_FEED_ISSUE_WEBHOOK_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTIFY_USERS: "<@U0185TBQBP0>"
+          GITHUB_EVENT_JSON: ${{ toJson(github.event) }}
+        run: |
+          # 1) 新ステータスを取得
+          STATUS=$(echo "$GITHUB_EVENT_JSON" | jq -r '.changes.field_value.to')
+          
+          # 2) Issue 情報を取得する
+          # projects_v2_item.content_node_id を取得
+          CONTENT_NODE_ID=$(echo "$GITHUB_EVENT_JSON" | jq -r '.projects_v2_item.content_node_id')
+          
+          # GraphQL で Issue タイトルとURLを取得する例(簡易)
+          ISSUE_DATA=$(curl -s \
+            -H "Authorization: bearer $GITHUB_TOKEN" \
+            -X POST \
+            -d '{"query":"query($id:ID!){ node(id:$id){ ... on Issue{ title url }}}","variables":{"id":"'"${CONTENT_NODE_ID}"'"}}' \
+            https://api.github.com/graphql)
+
+          ISSUE_TITLE=$(echo "$ISSUE_DATA" | jq -r '.data.node.title')
+          ISSUE_URL=$(echo "$ISSUE_DATA"   | jq -r '.data.node.url')
+
+          echo "新ステータス: $STATUS"
+          echo "Issue Title: $ISSUE_TITLE"
+          echo "Issue URL: $ISSUE_URL"
+
+          # 3) ステータスに応じてSlack 通知
+          if [ "$STATUS" == "開発待ち(Frontend)" ]; then
+            echo "開発待ち(Frontend) のステータスが検出されました"
+            curl -X POST -H 'Content-type: application/json' --data '{
+              "text": "Issue status changed to *開発待ち(Frontend)* : '"${NOTIFY_USERS}"' 次のフロント開発準備OK👍 \n*Issue Title:* <'"$ISSUE_URL"'|'"$ISSUE_TITLE"'>",
+              "icon_emoji": ":rocket:"
+            }' $SLACK_WEBHOOK_URL
+          elif [ "$STATUS" == "QA中" ]; then
+            echo "QA中 のステータスが検出されました"
+            curl -X POST -H 'Content-type: application/json' --data '{
+              "text": "Issue status changed to *テスト中* : '"${NOTIFY_USERS}"' テストを開始してください🏃‍♂️ \n*Issue Title:* <'"$ISSUE_URL"'|'"$ISSUE_TITLE"'>",
+              "icon_emoji": ":test_tube:"
+            }' $SLACK_WEBHOOK_URL
+          else
+            echo "未知のステータス: $STATUS"
+          fi
