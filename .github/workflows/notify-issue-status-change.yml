@@ -1,7 +1,7 @@
 name: Notify Slack on Issue Status Change
 
 on:
-  projects_v2_item:
+  project_card:
     types: [edited]
 
 jobs:
