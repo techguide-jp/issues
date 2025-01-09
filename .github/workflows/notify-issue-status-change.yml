@@ -13,8 +13,14 @@ jobs:
 
       - name: Debug GitHub Event
         env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MF_FEED_ISSUE_WEBHOOK_URL }}
           GITHUB_EVENT_JSON: ${{ toJson(github.event) }}
-        run: echo "イベントテスト：$GITHUB_EVENT_JSON"
+        run: |
+          echo "イベントテスト：$GITHUB_EVENT_JSON"
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": "testですよ📝",
+            "icon_emoji": ":rocket:"
+          }' $SLACK_WEBHOOK_URL
 
       - name: Extract status and send Slack notification
         env:
