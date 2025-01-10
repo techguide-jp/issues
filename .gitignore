@@ -1,1 +1,4 @@
 .secrets
+.env
+data/
+node_modules/
