@@ -31,6 +31,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: state-file
+          path: data/state.json
+
       - name: Run notify script
         run: npm run notify_changed_issue_status
 
