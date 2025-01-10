@@ -13,7 +13,7 @@ jobs:
       contents: read
       issues: read
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.MY_PAT_TOKEN }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MF_FEED_ISSUE_WEBHOOK_URL }}
       NOTIFY_USERS: '<@U0185TBQBP0>'
       ORG: techguide-jp
