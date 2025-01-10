@@ -22,3 +22,9 @@ jobs:
 
       - name: Run notify script
         run: npm run notify_changed_issue_status
+
+      - name: Upload state file
+        uses: actions/upload-artifact@v2
+        with:
+          name: state-file
+          path: data/state.json
