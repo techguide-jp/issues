@@ -9,6 +9,10 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     environment: ENV
+    permissions:
+      contents: read
+      issues: read
+      projects: read
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MF_FEED_ISSUE_WEBHOOK_URL }}
