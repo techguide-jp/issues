@@ -8,6 +8,14 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
+    environment: ENV
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_MF_FEED_ISSUE_WEBHOOK_URL }}
+      NOTIFY_USERS: '<@U0185TBQBP0>'
+      ORG: techguide-jp
+      PROJECT_NUM: 5
+      REPO: issues
     steps:
       - name: Check out code (optional, if needed)
         uses: actions/checkout@v3
