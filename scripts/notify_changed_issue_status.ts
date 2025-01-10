@@ -167,6 +167,7 @@ const getNewState = (): Promise<Results> => {
       }
 
       const data = await response.json();
+      console.log(data);
       // エラーレスポンスかどうかをチェック
       if (isGraphQLErrorResponse(data)) {
         console.error('GraphQL Errors:', data.errors);
