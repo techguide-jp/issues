@@ -1,4 +1,4 @@
-Name: Notify Slack on Issue Status Change
+name: Notify Slack on Issue Status Change
 
 on:
   schedule:
