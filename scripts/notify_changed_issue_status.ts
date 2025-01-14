@@ -76,12 +76,16 @@ const readStateFile = (): Results => {
   try {
     const fileContent = fs.readFileSync(STATE_FILE, 'utf-8');
     const parsedContent = JSON.parse(fileContent);
+    console.log('stateFile:', parsedContent);
+
     return {
       DevelopmentPendingFrontend: parsedContent.DevelopmentPendingFrontend || [],
       QATesting: parsedContent.QATesting || [],
       Unset: parsedContent.Unset || []
     };
   } catch (error) {
+    console.error('Error reading or parsing state file:', error);
+
     // ファイルが存在しない場合は空のデータを返す
     return {
       DevelopmentPendingFrontend: [],
