@@ -36,6 +36,7 @@ jobs:
         with:
           name: state-file
           path: data/state.json
+        continue-on-error: true  # エラーが発生しても続行
 
       - name: Run notify script
         run: npm run notify_changed_issue_status
