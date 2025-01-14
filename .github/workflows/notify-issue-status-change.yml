@@ -1,4 +1,4 @@
-name: Notify Slack on Issue Status Change
+eame: Notify Slack on Issue Status Change
 
 on:
   schedule:
@@ -32,7 +32,7 @@ jobs:
         run: yarn install
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
           path: data/state.json
           key: state-file
@@ -42,7 +42,7 @@ jobs:
         run: npm run notify_changed_issue_status
 
       - name: Save cache
-        uses: actions/cache@v3
+        uses: actions/cache/save@v3
         with:
           path: data/state.json
           key: state-file
