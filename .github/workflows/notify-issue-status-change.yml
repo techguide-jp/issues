@@ -1,4 +1,4 @@
-eame: Notify Slack on Issue Status Change
+Name: Notify Slack on Issue Status Change
 
 on:
   schedule:
