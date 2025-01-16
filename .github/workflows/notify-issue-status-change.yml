@@ -45,4 +45,6 @@ jobs:
         uses: actions/cache/save@v3
         with:
           path: data/state.json
-          key: state-file
+          key: state-file-${{ github.run_id }}
+          restore-keys: |
+            state-file-
