@@ -35,8 +35,9 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: data/state.json
-          key: state-file
-          restore-keys: state-file
+          key: state-file-
+          restore-keys: |
+            state-file-
 
       - name: Run notify script
         run: npm run notify_changed_issue_status
